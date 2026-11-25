@@ -1,340 +1,225 @@
-# Stovest – Stock Market Analysis & Portfolio Insights
+<div align="center">
 
-> **Explore Markets. Understand Trends. Build Insights.**
+<img src="https://img.shields.io/badge/STOVEST-Explore%20Markets.%20Understand%20Trends.%20Build%20Insights.-101B33?style=for-the-badge&labelColor=2457D6" alt="Stovest Banner" />
 
-[![Python](https://img.shields.io/badge/Python-3.8%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![MySQL](https://img.shields.io/badge/Database-MySQL-4479A1?logo=mysql&logoColor=white)](https://www.mysql.com/)
-[![yfinance](https://img.shields.io/badge/Data-yfinance-6001D2)](https://pypi.org/project/yfinance/)
-[![Matplotlib](https://img.shields.io/badge/Charts-Matplotlib-11557C)](https://matplotlib.org/)
-[![License](https://img.shields.io/github/license/DhineshkarthikR/stovest)](LICENSE)
-[![GitHub Stars](https://img.shields.io/github/stars/DhineshkarthikR/stovest?style=social)](https://github.com/DhineshkarthikR/stovest/stargazers)
-[![GitHub Forks](https://img.shields.io/github/forks/DhineshkarthikR/stovest?style=social)](https://github.com/DhineshkarthikR/stovest/network/members)
-[![Open Issues](https://img.shields.io/github/issues/DhineshkarthikR/stovest)](https://github.com/DhineshkarthikR/stovest/issues)
+<br /><br />
 
----
+# STOVEST
 
-## Overview
+### *Explore Markets. Understand Trends. Build Insights.*
 
-**Stovest** is a lightweight, command-line stock market analysis application written in Python. It combines a MySQL-backed ticker watchlist with historical market data from Yahoo Finance (`yfinance`) and 2D trend visualization using Matplotlib.
+**Making stock market exploration simple, visual and accessible.**
 
-The project is designed for students, developers, and market learners who want a straightforward way to store company ticker symbols, retrieve historical closing prices for a chosen day window, plot price movements, and inspect basic start-to-end directional momentum from the terminal.
+A friendly way to save the companies you follow, look up their historical stock prices, and see how they have moved over time on a clean chart.
 
----
+<br />
 
-## Table of Contents
+[![GitHub Stars](https://img.shields.io/github/stars/DhineshkarthikR/stovest?style=for-the-badge&color=16A36A&labelColor=101B33&logo=github)](https://github.com/DhineshkarthikR/stovest/stargazers)
+[![GitHub Forks](https://img.shields.io/github/forks/DhineshkarthikR/stovest?style=for-the-badge&color=2457D6&labelColor=101B33&logo=github)](https://github.com/DhineshkarthikR/stovest/network/members)
+[![Open Issues](https://img.shields.io/github/issues/DhineshkarthikR/stovest?style=for-the-badge&color=2457D6&labelColor=101B33&logo=github)](https://github.com/DhineshkarthikR/stovest/issues)
+[![MIT License](https://img.shields.io/github/license/DhineshkarthikR/stovest?style=for-the-badge&color=16A36A&labelColor=101B33)](LICENSE)
 
-- [Key Features](#key-features)
-- [Technology Stack](#technology-stack)
-- [Application Workflow](#application-workflow)
-- [Architecture](#architecture)
-- [Prerequisites](#prerequisites)
-- [Installation & Setup](#installation--setup)
-  - [1. Clone the Repository](#1-clone-the-repository)
-  - [2. Virtual Environment Setup](#2-virtual-environment-setup)
-  - [3. Install Dependencies](#3-install-dependencies)
-  - [4. MySQL Configuration](#4-mysql-configuration)
-  - [5. Environment Configuration](#5-environment-configuration)
-- [Running the Application](#running-the-application)
-- [Running Tests](#running-tests)
-- [Project Structure](#project-structure)
-- [Screenshots & CLI Preview](#screenshots--cli-preview)
-- [Current Limitations](#current-limitations)
-- [Future Development Roadmap](#future-development-roadmap)
-- [Contributing](#contributing)
-- [Financial Disclaimer](#financial-disclaimer)
-- [License](#license)
-- [Developer Attribution](#developer-attribution)
+<br />
+
+[See How It Works](#-see-how-it-works) &nbsp;•&nbsp; [Application Preview](#-application-preview) &nbsp;•&nbsp; [Get Started](#-getting-started) &nbsp;•&nbsp; [Join the Journey](#-join-the-journey)
+
+</div>
 
 ---
 
-## Key Features
+## 💡 The Idea Behind Stovest
 
-- **MySQL Ticker Watchlist**: Automatically initializes the `ticker` table (`S_NO`, `COMPANY_NAME`, `TICKER_SYMBOL`) if it does not exist, lets you add new ticker records, and displays stored tickers in a formatted terminal table.
-- **Historical Market Data Retrieval**: Fetches historical daily OHLCV data for any valid Yahoo Finance ticker symbol (such as `AAPL`, `MSFT`, `TCS.NS`, or `RELIANCE.NS`) over a user-specified number of days (`period="<days>d"`).
-- **Closing Price Visualization**: Generates a Matplotlib line chart of historical closing prices with date-indexed axes, data point markers, gridlines, and legends.
-- **Basic Directional Momentum Check**: Compares the first and last closing prices within the selected window to report whether the price is `increasing`, `decreasing`, or has `insufficient data`, alongside an educational summary label.
-- **Environment-Based Configuration**: Loads MySQL connection parameters from `.env` or OS environment variables via `python-dotenv`, keeping credentials out of source control.
-- **Parameterized SQL Queries**: Uses parameterized `%s` placeholders in `stovest/db.py` for database inserts and lookups.
-- **Unit Test Suite**: Includes `unittest`-based tests in `tests/` covering configuration loading, mocked MySQL operations, and stock analysis/plotting logic.
+Have you ever wondered how the price of your favourite company's stock has changed over time?
+
+For most people, looking up stock prices feels overwhelming. Financial websites are packed with cluttered charts, unfamiliar numbers, and confusing jargon before you even get a simple answer to a simple question: *Did this stock go up or down over the last few weeks?*
+
+**Stovest** was created to make that first step effortless. Instead of drowning you in complex trading screens, it gives you a quiet, focused space to keep a personal list of companies, pick any time window you are curious about, and see the story of a stock's historical price movement through a clear visual chart.
 
 ---
 
-## Technology Stack
+## ✨ What Can You Do With Stovest?
 
-| Component | Technology | Purpose |
-| :--- | :--- | :--- |
-| **Language** | Python 3.8+ | Core application runtime |
-| **Database** | MySQL (`mysql-connector-python>=8.0.30`) | Persistent storage for ticker symbols and company names |
-| **Market Data** | `yfinance>=0.2.30` | Fetching historical stock data from Yahoo Finance |
-| **Visualization** | `matplotlib>=3.7.0` | Plotting closing price trend charts |
-| **Data Handling** | `pandas` (via `yfinance`) | Time-series `DataFrame` and `Series` processing |
-| **Configuration** | `python-dotenv>=1.0.0` | Loading database settings from `.env` |
-| **Testing & Linting** | `pytest>=7.4.0`, `flake8>=6.1.0` | Optional development dependencies (`requirements-dev.txt`) |
+<table>
+  <tr>
+    <td width="50%" valign="top">
+      <h3>📌 Save Your Stocks</h3>
+      <p>Keep your own list of company names and stock symbols (like <code>AAPL</code> or <code>TCS.NS</code>) so you do not have to look them up every time.</p>
+    </td>
+    <td width="50%" valign="top">
+      <h3>🔍 Explore Stock Prices</h3>
+      <p>Type in a stock symbol and choose how many days of historical market data you want to examine—whether that is a week, a month, or longer.</p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" valign="top">
+      <h3>📈 Visualize Market Movement</h3>
+      <p>See historical <strong>closing prices</strong> (the final price of a stock at the end of each trading day) plotted on an easy-to-read line chart.</p>
+    </td>
+    <td width="50%" valign="top">
+      <h3>🧭 Understand Price Direction</h3>
+      <p>Automatically compare the starting and ending closing prices in your chosen period to see whether the overall movement was upward or downward.</p>
+    </td>
+  </tr>
+</table>
 
 ---
 
-## Application Workflow
+## 🚀 See How It Works
 
-1. **Startup & Connection**: `main.py` invokes `stovest.cli.main()`, which reads database settings from `stovest.config.get_db_config()` and opens a MySQL connection via `stovest.db.get_connection()`.
-2. **Interactive Menu**:
-   - **Option 1 (`CREATE / POPULATE TICKER TABLE`)**: Ensures the `ticker` table exists and inserts one or more `(S_NO, COMPANY_NAME, TICKER_SYMBOL)` records.
-   - **Option 2 (`DISPLAY REGISTERED TICKER SYMBOLS`)**: Queries all rows from `ticker` and prints them in a tabular CLI view.
-   - **Option 3 (`ANALYZE STOCK MARKET TREND`)**: Prompts for a ticker symbol and number of days, looks up the company name in MySQL, fetches historical data via `yfinance`, renders a Matplotlib closing-price chart, and prints the start-to-end momentum evaluation.
-   - **Option 4 (`EXIT`)**: Closes the cursor and database connection and exits cleanly.
+Exploring a stock with Stovest takes four simple steps:
+
+1. **Add a company and its stock symbol** — Build your personal list by entering a company name and its market ticker (for example, `TCS.NS` or `AAPL`).
+2. **View your saved stock list** — Check the companies you have stored whenever you want a quick reminder of their symbols.
+3. **Select a stock and an analysis period** — Pick a company symbol and decide how many past days of prices you would like to inspect.
+4. **Explore the resulting price chart and historical movement** — A visual line chart opens showing the daily closing prices, followed by a quick summary comparing the first day to the last day.
 
 ---
 
-## Architecture
+## 🖥️ Application Preview
 
-```mermaid
-flowchart TD
-    User([User Terminal]) --> Main[main.py]
-    Main --> CLI[stovest/cli.py]
+Stovest runs directly in your terminal and opens an interactive **Matplotlib** chart window whenever you analyze a stock.
 
-    CLI --> Config[stovest/config.py]
-    Config --> Env[.env / Environment Variables]
+When you launch the app, you are greeted with a simple three-option menu:
 
-    CLI --> DB[stovest/db.py]
-    DB --> MySQL[(MySQL: stock_market.ticker)]
-
-    CLI --> Analyzer[stovest/analyzer.py]
-    Analyzer --> DB
-    Analyzer --> YF[yfinance / Yahoo Finance]
-    Analyzer --> MPL[Matplotlib Chart Window]
+```text
+1. CREATE TABLE OF TICKER SYMBOL.
+2. DISPLAY TICKER SYMBOL.
+3. ANALYZE THE STOCK.
+Enter your choice:
 ```
 
----
+Choosing **Option 3** fetches historical daily data for your chosen number of days, displays a line chart of closing prices, and prints a simple start-to-end comparison in the terminal.
 
-## Prerequisites
-
-- **Python** 3.8 or higher installed and available on your `PATH`
-- **MySQL Server** 8.0+ (or compatible MariaDB instance) running locally or accessible over the network
-- **Internet connection** for querying historical market data from Yahoo Finance
+<!-- Add genuine application & chart screenshots here when available -->
 
 ---
 
-## Installation & Setup
+## 👥 Who Is Stovest For?
 
-### 1. Clone the Repository
+- **Students exploring the stock market** who want a hands-on way to see how company stock prices move over time.
+- **Beginners learning about historical stock prices** without needing to navigate intimidating financial terminals.
+- **Finance enthusiasts** who are curious about checking short- and medium-term price movements for companies they follow.
+- **Developers** interested in exploring a clean, straightforward example of stock market analysis and financial data visualization in Python.
+
+---
+
+## 🔧 Behind the Scenes
+
+<details>
+<summary><strong>Curious about how Stovest works?</strong> (Click to expand)</summary>
+
+<br />
+
+Under the hood, Stovest connects four straightforward tools:
+
+- **Python** powers the terminal menu, user prompts, and overall application flow.
+- **MySQL** stores your saved list of company names and stock ticker symbols in a local database.
+- **Yahoo Finance (`yfinance`)** provides historical daily stock price data for the ticker and number of days you request *(note: Stovest looks up historical data rather than live real-time streaming prices)*.
+- **Matplotlib** draws the closing price line chart in a dedicated window so you can visually inspect the trend.
+
+</details>
+
+---
+
+## 🛠️ Getting Started
+
+Want to try Stovest on your own computer? You will need **Python** and a local **MySQL** server.
+
+<details>
+<summary><strong>Step-by-step setup instructions</strong> (Click to expand)</summary>
+
+<br />
+
+### 1. Download the Project
 
 ```bash
 git clone https://github.com/DhineshkarthikR/stovest.git
 cd stovest
 ```
 
-### 2. Virtual Environment Setup
+### 2. Set Up a Python Virtual Environment
 
-Create and activate an isolated Python virtual environment:
+Create and activate an isolated environment for the project:
 
 ```bash
-python -m venv .venv
+python -m venv venv
 ```
 
-**Windows (PowerShell):**
+**On Windows (PowerShell):**
 
 ```powershell
-.\.venv\Scripts\Activate.ps1
+.\venv\Scripts\Activate.ps1
 ```
 
-**Windows (Command Prompt):**
-
-```cmd
-.venv\Scripts\activate.bat
-```
-
-**Linux / macOS:**
+**On macOS / Linux:**
 
 ```bash
-source .venv/bin/activate
+source venv/bin/activate
 ```
 
-### 3. Install Dependencies
-
-Install runtime dependencies:
+### 3. Install Required Packages
 
 ```bash
-pip install -r requirements.txt
+pip install yfinance matplotlib mysql-connector-python
 ```
 
-*(Optional)* Install development and testing dependencies:
+### 4. Set Up the MySQL Database
 
-```bash
-pip install -r requirements-dev.txt
-```
-
-### 4. MySQL Configuration
-
-Log into your MySQL server and create the database expected by Stovest:
+Open your MySQL client and create the database that Stovest uses to store your stock list:
 
 ```sql
-CREATE DATABASE IF NOT EXISTS stock_market;
+CREATE DATABASE stock_market;
 ```
 
-The `ticker` table is created automatically when you select **Option 1** in the CLI, or you can inspect its schema:
+Before running the app, open `STOCK MARKET INVETSMENT ADVISOR.py` and make sure the MySQL connection settings (`host`, `user`, `password`, and `database`) match your local MySQL server configuration.
 
-```sql
-USE stock_market;
-CREATE TABLE IF NOT EXISTS ticker (
-    S_NO INT,
-    COMPANY_NAME VARCHAR(100),
-    TICKER_SYMBOL VARCHAR(20)
-);
-```
-
-### 5. Environment Configuration
-
-Copy `.env.example` to `.env` and update it with your MySQL credentials:
+### 5. Run Stovest
 
 ```bash
-cp .env.example .env
+python "STOCK MARKET INVETSMENT ADVISOR.py"
 ```
 
-On Windows PowerShell:
-
-```powershell
-Copy-Item .env.example .env
-```
-
-Edit `.env`:
-
-```dotenv
-DB_HOST=localhost
-DB_PORT=3306
-DB_USER=root
-DB_PASSWORD=your_mysql_password_here
-DB_NAME=stock_market
-```
-
-> **Note:** Never commit your `.env` file or real database passwords to version control.
+</details>
 
 ---
 
-## Running the Application
+## 🗺️ What's Coming Next?
 
-Start the modular CLI application:
+Stovest is an evolving project. The ideas below are **future plans**—they are not yet implemented in the current version:
 
-```bash
-python main.py
-```
-
-*(The repository also retains the original single-file prototype `STOCK MARKET INVETSMENT ADVISOR.py` for reference.)*
-
----
-
-## Running Tests
-
-Run the unit test suite using `unittest` or `pytest`:
-
-```bash
-python -m unittest discover tests
-```
-
-Or with `pytest` (if `requirements-dev.txt` is installed):
-
-```bash
-pytest
-```
+- [ ] **Multiple stock comparison** — Compare price movements of two or more companies on the same chart.
+- [ ] **Technical indicators** — Add popular trend helpers like moving averages to spot patterns more easily.
+- [ ] **Better watchlist management** — Edit, search, and remove saved stocks directly from the menu.
+- [ ] **Portfolio tracking** — Keep track of hypothetical or personal holdings over time.
+- [ ] **Visual dashboard** — Provide a dedicated graphical interface alongside the terminal experience.
+- [ ] **Exportable analysis reports** — Save charts and price summaries for offline reading.
 
 ---
 
-## Project Structure
+## 🤝 Join the Journey
 
-```text
-stovest/
-├── main.py                              # Application entry point
-├── stovest/
-│   ├── __init__.py                      # Package metadata
-│   ├── analyzer.py                      # yfinance data fetching, Matplotlib plotting, momentum check
-│   ├── cli.py                           # Interactive terminal menu and handlers
-│   ├── config.py                        # Environment / .env configuration loader
-│   └── db.py                            # MySQL connection and ticker table operations
-├── tests/
-│   ├── __init__.py
-│   ├── test_analyzer.py                 # Unit tests for stock analysis & plotting
-│   ├── test_config.py                   # Unit tests for configuration loading
-│   └── test_db.py                       # Unit tests for mocked MySQL operations
-├── STOCK MARKET INVETSMENT ADVISOR.py   # Original standalone script
-├── .env.example                         # Sample environment variable configuration
-├── .gitignore                           # Git ignore rules
-├── .gitattributes                       # Git line-ending configuration
-├── requirements.txt                     # Runtime Python dependencies
-├── requirements-dev.txt                 # Development/test dependencies
-├── LICENSE                              # MIT License
-└── README.md                            # Project documentation
-```
+Stovest is open source and built for learning. If you find the idea interesting, you are welcome to explore and get involved:
+
+- ⭐ **Star the repository** on [GitHub](https://github.com/DhineshkarthikR/stovest) if you would like to bookmark or support the project.
+- 🍴 **Fork the project** to experiment with your own ideas.
+- 🐛 **Report bugs or suggest improvements** by opening an issue on the [Issue Tracker](https://github.com/DhineshkarthikR/stovest/issues).
 
 ---
 
-## Screenshots & CLI Preview
+## ⚠️ Disclaimer
 
-No image screenshots are currently included in this repository. Below is an example of the interactive CLI menu output:
+Stovest is an **educational project** created to help users explore historical stock market data and charts.
 
-```text
-=============================================
-      STOVEST - INVESTMENT ADVISOR
-=============================================
-1. CREATE / POPULATE TICKER TABLE
-2. DISPLAY REGISTERED TICKER SYMBOLS
-3. ANALYZE STOCK MARKET TREND
-4. EXIT
-=============================================
-Enter your choice (1-4):
-```
-
-When Option 3 is selected, a Matplotlib window opens displaying the closing price trend for the requested ticker and day range, followed by the terminal momentum summary.
+The application uses historical data from Yahoo Finance (not real-time streaming quotes) and checks price direction simply by comparing the first and last closing prices in the selected time period. While the terminal output prints simple labels such as *"Safe to Invest!"* or *"Risky to Invest!"* based on that start-to-end comparison, **this is a basic historical observation—not investment advice**, and it cannot determine whether any stock is safe to buy. Always do your own research or consult a qualified financial advisor before making financial decisions.
 
 ---
 
-## Current Limitations
+<div align="center">
 
-- **Historical Data Only**: Relies on historical daily data from Yahoo Finance (`yfinance`) rather than real-time streaming market feeds.
-- **Simple Momentum Heuristic**: `evaluate_momentum` only compares the start and end closing prices over the requested period; it does not calculate technical indicators (such as SMA, EMA, RSI, or MACD) or fundamental ratios.
-- **No AI or Predictive Modeling**: Does not include machine learning, price forecasting, or automated portfolio optimization.
-- **Educational Signal Labels**: The CLI prints simple directional labels based on net period change; these outputs are strictly for educational demonstration and do not evaluate investment safety or risk.
-- **Local MySQL Dependency**: Requires a configured MySQL server to store and look up ticker records.
-- **CLI & Desktop Plot Only**: Operates strictly in the terminal with local Matplotlib windows (no web interface or portfolio P&L tracking).
+### Built with curiosity by [Dhinesh Karthik R](https://github.com/DhineshkarthikR).
 
----
+*Explore Markets. Understand Trends. Build Insights.*
 
-## Future Development Roadmap
+Licensed under the [MIT License](LICENSE).
 
-Planned enhancements for future releases include:
-
-- [ ] Technical indicators (SMA, EMA, RSI, MACD)
-- [ ] Portfolio allocation and simulated profit/loss tracking
-- [ ] Multi-ticker comparison charts
-- [ ] Exportable analysis reports (CSV / JSON)
-- [ ] Optional web dashboard interface
-
----
-
-## Contributing
-
-Contributions, bug reports, and feature suggestions are welcome.
-
-1. Fork the repository.
-2. Create a feature branch:
-   ```bash
-   git checkout -b feature/your-feature-name
-   ```
-3. Make your changes and verify tests pass (`python -m unittest discover tests`).
-4. Commit your changes and push to your fork.
-5. Open a Pull Request describing your changes.
-
----
-
-## Financial Disclaimer
-
-> **Important:** Stovest is an **educational and informational software project**. It does **not** provide financial, investment, tax, or legal advice, and it does not guarantee any financial returns. No stock or security should ever be considered safe to invest in solely based on historical price comparisons or automated CLI outputs. Always conduct independent research and consult a qualified, licensed financial advisor before making any investment decisions.
-
----
-
-## License
-
-This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
-
----
-
-## Developer Attribution
-
-Developed and maintained by **[Dhinesh Karthik R](https://github.com/DhineshkarthikR)**.
+</div>
