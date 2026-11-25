@@ -1,3 +1,0 @@
-yfinance>=0.2.30
-matplotlib>=3.7.0
-mysql-connector-python>=8.0.30
